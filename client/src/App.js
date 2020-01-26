@@ -56,7 +56,7 @@ class App extends Component {
     await PropertyFactory.methods.createProperty(12, "1' rue de la confluence 93200", "/path", "une belle maison", 14, "kshdfvkjfdvjfbdv", true).send({ from: accounts[0] });
     await PropertyFactory.methods.createProperty(12, "1' rue de la confluence 93200", "/path", "une belle maison", 14, "kshdfvkjfdvjfbdv", true).send({ from: accounts[0] });
     
-    await PropertyFactory.methods.buyProperty(0, 0x7dC9B6bDF03a89626b5edbDa5BDF4D0514099e78).send({ from: accounts[0] });;
+    await PropertyFactory.methods.buyProperty(0, accounts[0]).send({ from: accounts[0] });;
 
     let allProperties = await PropertyFactory.methods.getAllProperties().call();
     this.setState({allProperties: allProperties});

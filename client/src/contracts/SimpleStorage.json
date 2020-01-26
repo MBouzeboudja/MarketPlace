@@ -587,12 +587,12 @@
     "1580029024293": {
       "events": {},
       "links": {},
-      "address": "0xB3D20F199d9b159BBeb5e597D5DfF891DB990eD3",
-      "transactionHash": "0x5e1c6598186007d1ef2e735dd4b880388add4e017f68610893e74167bdab3186"
+      "address": "0x635Df424C3f6174A98a68F834746fe7F4d65bAAB",
+      "transactionHash": "0x104f18dfec0d43d1b53c9a08a41db3e8ce572eb0917c84ecbfbf67bf20ce3540"
     }
   },
   "schemaVersion": "3.0.19",
-  "updatedAt": "2020-01-26T11:41:10.221Z",
+  "updatedAt": "2020-01-26T14:02:09.970Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

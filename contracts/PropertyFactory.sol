@@ -15,27 +15,43 @@ contract PropertyFactory {
         bool availability;
     }
 
+    //List of properties..
     Property[] properties;
 
+    // Number of properties made for sale.
     uint propertiesCount = 0;
 
+    // Mapping
     mapping (uint => address) public propertiesToOwner;
     mapping (address => uint) public ownerPropertiesCount;
 
     event NewProperty(uint id);
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
+    // Check that the property with the id _idProperty is belongs to the user with id _userAdress.
     modifier PropertyOwner(uint256 _idProperty, address _userAdress) {
         require(propertiesToOwner[_idProperty] == _userAdress, "Sender not authorized.");
         _;
     }
 
+    //Check if the property is made for sale.
+    modifier PropertyAvailabilty(uint256 _id){
+        require(properties[_id].availability, "The property is not available for sale");
+        _;
+    }
 
-    function createProperty(uint _price, string memory _propertyAddress,
-        string memory _urlImage, string memory _description, uint _surface, string memory _hashDocument, bool _availability
+    // Create a new property and make it for sale.
+    function createProperty(
+        uint _price,
+        string memory _propertyAddress,
+        string memory _urlImage,
+        string memory _description,
+        uint _surface,
+        string memory _hashDocument,
+        bool _availability
         )
-        public {
-
+        public
+    {
         // Add the properties.
         Property memory newProperty = Property(
             propertiesCount,
@@ -58,28 +74,44 @@ contract PropertyFactory {
         emit NewProperty(propertiesCount - 1);
     }
 
-    function getOwnerPropertiesCount(address _address) public view returns (uint){
+    function getOwnerPropertiesCount(address _address) public view returns (uint)
+    {
         return  ownerPropertiesCount[_address];
     }
 
-    function getPropertiesCount() public view returns(uint count) {
+    function getPropertiesCount() public view returns(uint count)
+    {
         return properties.length;
     }
 
-    function getAllProperties() public view returns(Property[] memory){
+    function getAllProperties() public view returns(Property[] memory)
+    {
         return properties;
     }
  
-    function setPropertyPrice(uint256 _idProperty, uint256 _newPrice) public PropertyOwner(_idProperty, msg.sender){
+    //Set new prise for a exsisting property.
+    function setPropertyPrice(uint256 _idProperty, uint256 _newPrice) public PropertyOwner(_idProperty, msg.sender)
+    {
         require(properties[_idProperty].availability, "Property is not available for sell or it not exists.");
         properties[_idProperty].price = _newPrice;
     }
 
+    //Change availability state(true or false).
+    function setAvailibilityForSale(uint256 _idProperty, bool availability) public PropertyOwner(_idProperty, msg.sender)
+    {
+        properties[_idProperty].availability = availability;
+    }
 
-    function buyProperty(uint256 _idProperty, address _buyerAdress) public payable PropertyOwner(_idProperty, msg.sender) {
-        if(properties[_idProperty].availability == true){
-            propertiesToOwner[_idProperty] = _buyerAdress;
-            emit Transfer(_buyerAdress, msg.sender, properties[_idProperty].price);
-        }
+    // By a existing property.
+    function buyProperty(uint256 _idProperty, address _buyerAdress)
+        public
+        payable
+        PropertyAvailabilty(_idProperty)
+    {
+        address oldOwner = propertiesToOwner[_idProperty];
+        ownerPropertiesCount[oldOwner] --;
+        ownerPropertiesCount[_buyerAdress] ++;
+        propertiesToOwner[_idProperty] = _buyerAdress;
+        emit Transfer(_buyerAdress, oldOwner, properties[_idProperty].price);
     }
 }
